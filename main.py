@@ -60,7 +60,7 @@ async def show_challenges(ctx):
     challenges = to.get_all_challenges(ctf + ".db")
     msg = ""
     for challenge in challenges:
-        msg += "NameID: " + challenge[1] + " | Name: " + challenge[2] + " | Points: " + str(challenge[3]) + " | Flag: " + str(challenge[5]) + " | History ASS: " + challenge[6] + " || "
+        msg += "NameID: " + challenge[1] + " | Name: " + challenge[2] + " | Points: " + str(challenge[3]) + " | Flag: " + str(challenge[5]) + " | History ASS: " + str(challenge[6]) + " |-| "
     await ctx.send(msg)
 
 #Show all history

@@ -41,7 +41,11 @@ async def create(ctx, name):
 #Set active ctf
 @bot.command(name="setactive", description="Set active CTF")
 async def setactive(ctx, name):
-    to.set_active_ctf(name)
+    try:
+        to.set_active_ctf(name)
+    except:
+        await ctx.send("Vous vous êtes trompé dans la commande ou le nom du CTF n'est pas valide.")
+        return
     await ctx.send("CTF set active")
 
     a_log("CTF set active by " + str(ctx.author) + " : " + name)
@@ -55,8 +59,16 @@ async def add_challenge(ctx, nameid: str, points: int, flag: str):
     #    await ctx.send("Tu ne peux pas ajouter de challenges.")
     #    return
 
-    ctf = to.get_active_ctf()[0]
-    to.add_challenge(ctf + ".db", nameid, points, flag)
+    try:
+        ctf = to.get_active_ctf()[0]
+    except:
+        await ctx.send("Aucun CTF n'est actif.")
+        return
+    try:
+        to.add_challenge(ctf + ".db", nameid, points, flag)
+    except:
+        await ctx.send("Vous vous êtes trompé dans la commande ou le CTF n'est pas actif")
+        return
 
     await ctx.send("Challenge ajouté !")
 
@@ -65,7 +77,11 @@ async def add_challenge(ctx, nameid: str, points: int, flag: str):
 #Show all challenges
 @bot.command(name="showchallenges", description="Show all challenges")
 async def show_challenges(ctx):
-    ctf = to.get_active_ctf()[0]
+    try:
+        ctf = to.get_active_ctf()[0]
+    except:
+        await ctx.send("Aucun CTF n'est actif.")
+        return
     challenges = to.get_all_challenges(ctf + ".db")
     msg = ""
     for challenge in challenges:
@@ -77,7 +93,11 @@ async def show_challenges(ctx):
 #Show all history
 @bot.command(name="showhistory", description="Show all history")
 async def show_history(ctx):
-    ctf = to.get_active_ctf()[0]
+    try:
+        ctf = to.get_active_ctf()[0]
+    except:
+        await ctx.send("Aucun CTF n'est actif.")
+        return
     history = to.get_all_history(ctf + ".db")
     msg = ""
     for h in history:
@@ -96,8 +116,16 @@ async def add_name(ctx, nameid: str, *, arg):
     #    await ctx.send("Tu ne peux pas ajouter de challenges.")
     #    return
 
-    ctf = to.get_active_ctf()[0]
-    to.update_name(ctf + ".db", nameid, arg)
+    try:
+        ctf = to.get_active_ctf()[0]
+    except:
+        await ctx.send("Aucun CTF n'est actif.")
+        return
+    try:
+        to.update_name(ctf + ".db", nameid, arg)
+    except:
+        await ctx.send("Le nom du challenge est incorrect ou le CTF n'est pas actif")
+        return    
 
     await ctx.send("Nom ajouté !")
 
@@ -112,7 +140,11 @@ async def add_description(ctx, nameid: str, *, arg):
     #    await ctx.send("Tu ne peux pas ajouter de challenges.")
     #    return
 
-    ctf = to.get_active_ctf()[0]
+    try:
+        ctf = to.get_active_ctf()[0]
+    except:
+        await ctx.send("Aucun CTF n'est actif.")
+        return
     try:
         to.update_description(ctf + ".db", nameid, arg)
     except:
@@ -132,7 +164,11 @@ async def add_points(ctx, nameid: str, points: int):
     #    await ctx.send("Tu ne peux pas ajouter de challenges.")
     #    return
 
-    ctf = to.get_active_ctf()[0]
+    try:
+        ctf = to.get_active_ctf()[0]
+    except:
+        await ctx.send("Aucun CTF n'est actif.")
+        return
     try:
         to.update_points(ctf + ".db", nameid, points)
     except:
@@ -152,7 +188,11 @@ async def add_flag(ctx, nameid: str, flag: str):
     #    await ctx.send("Tu ne peux pas ajouter de challenges.")
     #    return
 
-    ctf = to.get_active_ctf()[0]
+    try:
+        ctf = to.get_active_ctf()[0]
+    except:
+        await ctx.send("Aucun CTF n'est actif.")
+        return
     try:
         to.update_flag(ctf + ".db", nameid, flag)
     except:
@@ -172,7 +212,11 @@ async def add_history(ctx, nameid: str, dh: str):
     #    await ctx.send("Tu ne peux pas ajouter de challenges.")
     #    return
 
-    ctf = to.get_active_ctf()[0]
+    try:
+        ctf = to.get_active_ctf()[0]
+    except:
+        await ctx.send("Aucun CTF n'est actif.")
+        return
     try:
         to.update_history(ctf + ".db", nameid, dh)
     except:
@@ -192,7 +236,11 @@ async def add_history_to_history(ctx, *, arg):
     #    await ctx.send("Tu ne peux pas ajouter de challenges.")
     #    return
 
-    ctf = to.get_active_ctf()[0]
+    try:
+        ctf = to.get_active_ctf()[0]
+    except:
+        await ctx.send("Aucun CTF n'est actif.")
+        return
     try:
         to.add_history(ctf + ".db", arg)
     except:
@@ -212,7 +260,11 @@ async def startctf(ctx):
     #    await ctx.send("Tu ne peux pas ajouter de challenges.")
     #    return
 
-    ctf = to.get_active_ctf()[0]
+    try:
+        ctf = to.get_active_ctf()[0]
+    except:
+        await ctx.send("Aucun CTF n'est actif.")
+        return
     for i in to.get_all_players(ctf + ".db"):
         user = bot.get_user(int(i[0]))
         embed = discord.Embed(title="Le CTF a commencé !", description="Le Début", color=0x0000ff)
@@ -239,7 +291,11 @@ async def add_user(ctx):
 
     autid = ctx.author.id
 
-    ctf = to.get_active_ctf()[0]
+    try:
+        ctf = to.get_active_ctf()[0]
+    except:
+        await ctx.send("Aucun CTF n'est actif.")
+        return
     try:
         to.add_user(ctf + ".db", autid)
     except:
@@ -260,8 +316,11 @@ async def check_flag(ctx, flag: str):
 
     log("Tentative de Flag de " + str(ctx.author) + " : " + flag)
 
-    ctf = to.get_active_ctf()[0]
-
+    try:
+        ctf = to.get_active_ctf()[0]
+    except:
+        await ctx.send("Aucun CTF n'est actif.")
+        return
     autid = ctx.author.id
     if to.check_player(ctf + ".db", autid) is False:
         embed = discord.Embed(title="CTF - OKA", description="ERREUR !", color=0xff0000)
@@ -308,7 +367,11 @@ async def show_classement(ctx):
     if ctx.author.bot:
         return
 
-    ctf = to.get_active_ctf()[0]
+    try:
+        ctf = to.get_active_ctf()[0]
+    except:
+        await ctx.send("Aucun CTF n'est actif.")
+        return
     embed = discord.Embed(title="Classement", description="Classement du CTF", color=0xe05000)
     for i in to.get_classement(ctf + ".db"):
         pt = pt + 1
@@ -331,8 +394,11 @@ async def show_credits(ctx):
 
 @bot.command(name="endctf", description="End CTF")
 async def endctf(ctx):
-    ctf = to.get_active_ctf()[0]
-
+    try:
+        ctf = to.get_active_ctf()[0]
+    except:
+        await ctx.send("Aucun CTF n'est actif.")
+        return
     for i in to.get_all_players(ctf + ".db"):
         user = bot.get_user(int(i[0]))
         embed = discord.Embed(title="Le CTF est finis !", description="La FIN !", color=0x0000ff)

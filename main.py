@@ -20,11 +20,11 @@ async def on_ready():
 
 #Fonction qui log les print dans un fichier
 def log(text):
-    with open("ctf_log.txt", "a", encoding="UTF-8") as f:
+    with open("/root/oka/ctf_log.txt", "a", encoding="UTF-8") as f:
         f.write("[" + str(datetime.now()) + "] > " + text + "\n")
 
 def a_log(text):
-    with open("admin_ctf_log.txt", "a", encoding="UTF-8") as f:
+    with open("/root/oka/admin_ctf_log.txt", "a", encoding="UTF-8") as f:
         f.write("[" + str(datetime.now()) + "] > " + text + "\n")
 
 #Create a ctf
@@ -434,7 +434,7 @@ async def initall(ctx):
 
     a_log("Init all done by " + str(ctx.author))
 
-with open('config.json', encoding="UTF-8") as config_file:
+with open('/root/oka/config.json', encoding="UTF-8") as config_file:
     config = json.load(config_file)
 
 bot.run(config[0]['token'])

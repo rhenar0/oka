@@ -1,7 +1,6 @@
 import discord as discord
 from discord.ext import commands
 from datetime import datetime
-import asyncio
 import db_sqlite as to
 import json
 
@@ -9,6 +8,8 @@ description = '''A bot that helps you with CTFs'''
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
+
+admin_users = [173731309120651264, 615766504318959616, 561148984488361984]
 
 bot = commands.Bot(command_prefix='!', description=description, intents=intents)
 @bot.event
@@ -30,6 +31,10 @@ def a_log(text):
 #Create a ctf
 @bot.command(name="createctf", description="Create a CTF")
 async def create(ctx, name):
+    if ctx.author.id not in admin_users:
+        await ctx.send("Insufficient permissions")
+        a_log("Insufficient permissions for " + str(ctx.author))
+        return
     to.add_ctf(name)
     to.create_tchallenge(name + ".db")
     to.create_tuser(name + ".db")
@@ -41,6 +46,10 @@ async def create(ctx, name):
 #Set active ctf
 @bot.command(name="setactive", description="Set active CTF")
 async def setactive(ctx, name):
+    if ctx.author.id not in admin_users:
+        await ctx.send("Insufficient permissions")
+        a_log("Insufficient permissions for " + str(ctx.author))
+        return
     try:
         to.set_active_ctf(name)
     except:
@@ -55,9 +64,11 @@ async def setactive(ctx, name):
 async def add_challenge(ctx, nameid: str, points: int, flag: str):
     if ctx.author.bot:
         return
-    #if ctx.author.id != 1234567890:
-    #    await ctx.send("Tu ne peux pas ajouter de challenges.")
-    #    return
+
+    if ctx.author.id not in admin_users:
+        await ctx.send("Insufficient permissions")
+        a_log("Insufficient permissions for " + str(ctx.author))
+        return
 
     try:
         ctf = to.get_active_ctf()[0]
@@ -82,10 +93,14 @@ async def show_challenges(ctx):
     except:
         await ctx.send("Aucun CTF n'est actif.")
         return
+    if ctx.author.id not in admin_users:
+        await ctx.send("Insufficient permissions")
+        a_log("Insufficient permissions for " + str(ctx.author))
+        return
     challenges = to.get_all_challenges(ctf + ".db")
     msg = ""
     for challenge in challenges:
-        msg += "NameID: " + challenge[1] + " | Name: " + challenge[2] + " | Points: " + str(challenge[3]) + " | Flag: " + str(challenge[5]) + " | History ASS: " + str(challenge[6]) + " |-| "
+        msg += "NameID: " + challenge[1] + " | Points: " + str(challenge[3]) + " | Flag: " + str(challenge[5]) + " | History ASS: " + str(challenge[6]) + " |-| "
     await ctx.send(msg)
 
     a_log("Challenges shown by " + str(ctx.author))
@@ -98,10 +113,14 @@ async def show_history(ctx):
     except:
         await ctx.send("Aucun CTF n'est actif.")
         return
+    if ctx.author.id not in admin_users:
+        await ctx.send("Insufficient permissions")
+        a_log("Insufficient permissions for " + str(ctx.author))
+        return
     history = to.get_all_history(ctf + ".db")
     msg = ""
     for h in history:
-        msg += "ID : " + h[0] + "Content : " + h[1] + " || "
+        msg += "ID : " + str(h[0]) + " / Content : " + h[1] + " |-| "
     
     await ctx.send(msg)
 
@@ -112,9 +131,10 @@ async def show_history(ctx):
 async def add_name(ctx, nameid: str, *, arg):
     if ctx.author.bot:
         return
-    #if ctx.author.id != 1234567890:
-    #    await ctx.send("Tu ne peux pas ajouter de challenges.")
-    #    return
+    if ctx.author.id not in admin_users:
+        await ctx.send("Insufficient permissions")
+        a_log("Insufficient permissions for " + str(ctx.author))
+        return
 
     try:
         ctf = to.get_active_ctf()[0]
@@ -136,9 +156,10 @@ async def add_name(ctx, nameid: str, *, arg):
 async def add_description(ctx, nameid: str, *, arg):
     if ctx.author.bot:
         return
-    #if ctx.author.id != 1234567890:
-    #    await ctx.send("Tu ne peux pas ajouter de challenges.")
-    #    return
+    if ctx.author.id not in admin_users:
+        await ctx.send("Insufficient permissions")
+        a_log("Insufficient permissions for " + str(ctx.author))
+        return
 
     try:
         ctf = to.get_active_ctf()[0]
@@ -160,9 +181,10 @@ async def add_description(ctx, nameid: str, *, arg):
 async def add_points(ctx, nameid: str, points: int):
     if ctx.author.bot:
         return
-    #if ctx.author.id != 1234567890:
-    #    await ctx.send("Tu ne peux pas ajouter de challenges.")
-    #    return
+    if ctx.author.id not in admin_users:
+        await ctx.send("Insufficient permissions")
+        a_log("Insufficient permissions for " + str(ctx.author))
+        return
 
     try:
         ctf = to.get_active_ctf()[0]
@@ -184,9 +206,10 @@ async def add_points(ctx, nameid: str, points: int):
 async def add_flag(ctx, nameid: str, flag: str):
     if ctx.author.bot:
         return
-    #if ctx.author.id != 1234567890:
-    #    await ctx.send("Tu ne peux pas ajouter de challenges.")
-    #    return
+    if ctx.author.id not in admin_users:
+        await ctx.send("Insufficient permissions")
+        a_log("Insufficient permissions for " + str(ctx.author))
+        return
 
     try:
         ctf = to.get_active_ctf()[0]
@@ -208,9 +231,10 @@ async def add_flag(ctx, nameid: str, flag: str):
 async def add_history(ctx, nameid: str, dh: str):
     if ctx.author.bot:
         return
-    #if ctx.author.id != 1234567890:
-    #    await ctx.send("Tu ne peux pas ajouter de challenges.")
-    #    return
+    if ctx.author.id not in admin_users:
+        await ctx.send("Insufficient permissions")
+        a_log("Insufficient permissions for " + str(ctx.author))
+        return
 
     try:
         ctf = to.get_active_ctf()[0]
@@ -232,9 +256,10 @@ async def add_history(ctx, nameid: str, dh: str):
 async def add_history_to_history(ctx, *, arg):
     if ctx.author.bot:
         return
-    #if ctx.author.id != 1234567890:
-    #    await ctx.send("Tu ne peux pas ajouter de challenges.")
-    #    return
+    if ctx.author.id not in admin_users:
+        await ctx.send("Insufficient permissions")
+        a_log("Insufficient permissions for " + str(ctx.author))
+        return
 
     try:
         ctf = to.get_active_ctf()[0]
@@ -249,16 +274,17 @@ async def add_history_to_history(ctx, *, arg):
 
     await ctx.send("Histoire ajouté !")
 
-    a_log("History added by " + str(ctx.author) + " : " + nameid + " " + dh)
+    a_log("History added by " + str(ctx.author) + " : " + arg)
 
 #Start CTF and send message to all users
 @bot.command(name="startctf", description="Start CTF")
 async def startctf(ctx):
     if ctx.author.bot:
         return
-    #if ctx.author.id != 1234567890:
-    #    await ctx.send("Tu ne peux pas ajouter de challenges.")
-    #    return
+    if ctx.author.id not in admin_users:
+        await ctx.send("Insufficient permissions")
+        a_log("Insufficient permissions for " + str(ctx.author))
+        return
 
     try:
         ctf = to.get_active_ctf()[0]
@@ -425,9 +451,10 @@ async def endctf(ctx):
 async def initall(ctx):
     if ctx.author.bot:
         return
-    #if ctx.author.id != 1234567890:
-    #    await ctx.send("Tu ne peux pas ajouter de challenges.")
-    #    return
+    if ctx.author.id not in admin_users:
+        await ctx.send("Insufficient permissions")
+        a_log("Insufficient permissions for " + str(ctx.author))
+        return
     #to.drop_ctf()
     to.create_ctf()
     await ctx.send("Init all done")
